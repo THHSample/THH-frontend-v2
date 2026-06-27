@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import type AnimalResponse from './api/salesforce'
 import { ThemeProvider, createTheme } from '@mui/material';
 import { useState } from "react";
-import {getAnimals} from './api/salesforce'
+import {getAnimals, updateWalk} from './api/salesforce'
 
 
 var animalResponse: AnimalResponse[] = [];
@@ -31,6 +31,18 @@ function getIsWalkedText(isWalked: boolean): string {
 function ListItemRow({onAnimalClick}: AnimalTableProps) {
 
     const [loading, setIsLoading] = useState<Boolean>(true);
+
+    const onWalkClickFull = (animal: AnimalResponse, walkNumber : Number) => {
+        setIsLoading(true);
+        updateWalk({animalName: animal.name, walkNumber: walkNumber.toString()})
+        .then(_ => {
+            setIsLoading(true);
+            getAnimals().then(response => {
+                animalResponse = response;
+                setIsLoading(false);
+            }).catch(error => console.log("Got an error " + error))
+        })
+    }
     
     const renderPage = () => {
      switch(loading) {
@@ -55,9 +67,9 @@ function ListItemRow({onAnimalClick}: AnimalTableProps) {
                                     <TableRow key={index}>
                                         <TableCell align="center">{item.name}</TableCell>
                                         <TableCell align="center">{item.collarType}</TableCell>
-                                        <TableCell align="center">{getIsWalkedText(item.walk1)}</TableCell>
-                                        <TableCell align="center">{getIsWalkedText(item.walk2)}</TableCell>
-                                        <TableCell align="center">{getIsWalkedText(item.walk3)}</TableCell>
+                                        <TableCell align="center" onClick={() => onWalkClickFull(item, 1)}>{getIsWalkedText(item.walk1)}</TableCell>
+                                        <TableCell align="center" onClick={() => onWalkClickFull(item, 2)}>{getIsWalkedText(item.walk2)}</TableCell>
+                                        <TableCell align="center" onClick={() => onWalkClickFull(item, 3)}>{getIsWalkedText(item.walk3)}</TableCell>
                                         <TableCell align="center" onClick={() => onAnimalClick(item)}> Click me!</TableCell>
                                     </TableRow>
                                 ))}
