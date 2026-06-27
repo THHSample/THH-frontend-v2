@@ -2,6 +2,7 @@ import axios from "axios";
 
 const GET_ANIMALS_URL = "https://orgfarm-1b2bccc2e5-dev-ed.develop.my.salesforce-sites.com/services/apexrest/getAnimals";
 const UPDATE_WALK_URL = "https://orgfarm-1b2bccc2e5-dev-ed.develop.my.salesforce-sites.com/services/apexrest/updateWalk";
+const UPDATE_NOTES_URL = "https://orgfarm-1b2bccc2e5-dev-ed.develop.my.salesforce-sites.com/services/apexrest/updateNotes";
 
 export default interface AnimalResponse {
   kennel: number;
@@ -66,6 +67,31 @@ export async function updateWalk(walk: WalkUpdate) {
         },
         params: {"animalName": walk.animalName,
           "walkNumber": walk.walkNumber
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+
+  }
+}
+
+export interface NotesUpdate {
+  animalName: string,
+  notes: string
+}
+
+export async function updateNotes(notes: NotesUpdate) {
+  try {
+    const response = await axios.post(
+      UPDATE_NOTES_URL,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params: {"animalName": notes.animalName,
+          "notes": notes.notes
         },
       }
     );

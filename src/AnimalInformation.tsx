@@ -1,7 +1,7 @@
 import type AnimalResponse from './api/salesforce'
-import { TextField, Stack } from "@mui/material";
+import { TextField, Stack, Button } from "@mui/material";
 import { useState } from "react";
-
+import { updateNotes } from './api/salesforce'
 
 
 
@@ -14,6 +14,9 @@ function AnimalInformation(animalDetails: AnimalDetailsProp) {
     const [notes, setNotes] = useState<string | null>(null);
     const onNotesChanged = (notes: string) => {
         setNotes(notes);
+    }
+    const onSaveNotes = (animal: string, notes: string) => {
+        updateNotes({animalName: animal, notes: notes})
     }
     return(
         <Stack spacing={2}>
@@ -42,9 +45,13 @@ function AnimalInformation(animalDetails: AnimalDetailsProp) {
                 key={animalDetails.animal.notes}
                 label= "Notes"
                 value={notes ?? animalDetails.animal.notes}
-                size="small"
+                size="medium"
+                multiline
+                rows = {6}
                 onChange = {(notes) => onNotesChanged(notes.target.value)}
             />
+            <Button variant="outlined" onClick = {() => onSaveNotes(animalDetails.animal.name, notes ?? '')}>Save Notes</Button>
+
         </Stack>
     )
 
